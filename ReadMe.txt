@@ -1,5 +1,5 @@
 ﻿
-Usage: randstr [options <optarg>]
+Usage: randstr [options <optarg)>]
     -r  Set char range       (!-~).
     -l  Set print length (32-2048).
     -o  Set output file   (STDOUT).
@@ -7,6 +7,12 @@ Usage: randstr [options <optarg>]
     -h  Print this help.
 
 Length over 2048 only prints to a file.
-Range setting: -r 09azAZ for 0-9, a-z and A-Z.
+Command line supports unicode.
+The output file do not have unicode BOM.
 
-Command line uses unicode.
+Range setting:
+    -r 05ezAM       : 0-5 & e-z & A-M.
+    -r dp\\Z        : d-p & \-Z.
+    -r \cTest       : T & e & s & t.
+    -r \d0,35,76,89 : 0-35 & 76-89.
+    -r \x0,A,2e,37  : 0x00-0x0A & 0x2E-0x37.
