@@ -1,5 +1,5 @@
 ﻿
-Usage: randstr [options <optarg)>]
+Usage: randstr [options <optarg>]
     -r  Set char range       (!-~).
     -l  Set print length (32-2048).
     -o  Set output file   (STDOUT).

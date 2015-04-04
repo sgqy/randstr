@@ -8,7 +8,7 @@
 void phelp()
 {
     wprintf(
-        L"\nUsage: randstr [options <optarg)>]"
+        L"\nUsage: randstr [options <optarg>]"
         L"\n    -r  Set char range       (!-~)."
         L"\n    -l  Set print length (32-%d)."
         L"\n    -o  Set output file   (STDOUT)."
