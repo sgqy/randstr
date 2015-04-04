@@ -7,7 +7,7 @@
 
 void phelp()
 {
-    const wchar_t* d=
+    wprintf(
         L"\nUsage: randstr [options <optarg>]"
         L"\n    -r  Set char range       (!-~)."
         L"\n    -l  Set print length (32-2048)."
@@ -15,7 +15,10 @@ void phelp()
         L"\n    -s  Set random seed (CPU Tick)."
         L"\n    -h  Print this help."
         L"\n"
-        L"\nLength over 2048 only prints to a file.";
+        L"\nLength over 2048 only prints to a file."
+        L"\nRange setting: -r 09azAZ for 0-9, a-z and A-Z."
+        L"\n"
+        );
     exit(0);
 }
 
@@ -24,7 +27,8 @@ int wmain(int argc, wchar_t** argv)
 {
     _setmode(_fileno(stdout), _O_U16TEXT);
 
-    if (argc == 1) phelp();
+
+    //if (argc == 1) phelp();
 
     argstore argparser;
     opterr = 0;
@@ -32,7 +36,8 @@ int wmain(int argc, wchar_t** argv)
     argparser.init(); // no argument
 
     // now catch any argument
-    while (int opt = ~(getopt_w(argc, argv, L"s:l:o:r:h?")))
+    int opt = 0;
+    while (~(opt = getopt_w(argc, argv, L"s:l:o:r:h?")))
     {
         switch (opt)
         {
@@ -55,6 +60,7 @@ int wmain(int argc, wchar_t** argv)
 
     // do it
     makestr(argparser);
+
 
 	return 0;
 }

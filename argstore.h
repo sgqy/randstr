@@ -19,14 +19,29 @@ struct argstore
         outFile(0)
     {};
 
-    ~argstore() { if (rangeTable != 0) delete[] rangeTable; }
+    ~argstore() {
+        if (rangeTable != 0) delete[] rangeTable; 
+        if (outFile != 0 && outFile != stdout) fclose(outFile);
+    }
 
     void setSeed(const wchar_t*);
     void setLength(const wchar_t*);
     void setOutput(const wchar_t*);
     void setRange(const wchar_t*);
     void init();
+
+    wchar_t mapping(const wchar_t) const;
 };
+
+inline wchar_t argstore::mapping(const wchar_t num) const
+{
+    int index = 
+        num % tableLength
+        //(num * (long long)tableLength) / 0x10000
+        ;
+    return rangeTable[index];
+}
+
 
 inline void argstore::init()
 {
@@ -73,7 +88,7 @@ inline void argstore::setOutput(const wchar_t* name)
 
 inline void argstore::setRange(const wchar_t* raw)
 {
-    std::list<wchar_t> rangeList;
+    std::set<wchar_t> rangeSet;
 
     // set fallback
     if (raw == 0)
@@ -87,7 +102,8 @@ inline void argstore::setRange(const wchar_t* raw)
     for (int i = 0; i < rawLen; i += 2)
     {
         for (auto s = raw[i]; s <= raw[i + 1]; ++s)
-            rangeList.push_back(s);
+            rangeSet.insert(s);
+        
     }
 
     // when reset, delete existing memory
@@ -95,11 +111,17 @@ inline void argstore::setRange(const wchar_t* raw)
         delete[] rangeTable;
 
     // set new table array
-    rangeTable = new wchar_t[tableLength = rangeList.size()];
+    rangeTable = new wchar_t[tableLength = rangeSet.size()];
+    //wprintf(L"--- %d ---\n", tableLength);
 
     int index = 0;
-    for (auto s : rangeList)
+    for (auto s : rangeSet)
     {
         rangeTable[index++] = s;
+        //wprintf(L"%c", s);
     }
+    //wprintf(L"\n--------\n");
+
+    // last fallback
+    if (tableLength == 0) setRange(0);
 }
