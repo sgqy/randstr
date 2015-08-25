@@ -1,4 +1,4 @@
-﻿
+
 /* Getopt for Microsoft C
 This code is a modification of the Free Software Foundation, Inc.
 Getopt library for parsing command line argument the purpose was

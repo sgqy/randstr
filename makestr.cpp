@@ -7,7 +7,8 @@ std::default_random_engine rgen;
 
 void makestr(argstore & arg)
 {
-    _setmode(_fileno(arg.getOutput()), _O_U16TEXT);
+    if (printMode == 'a') { _setmode(_fileno(arg.getOutput()), _O_TEXT); }
+    else { _setmode(_fileno(arg.getOutput()), _O_U16TEXT); }
 
     // copy the range table for random access
     auto rangeSet = arg.getRange();
@@ -27,18 +28,28 @@ void makestr(argstore & arg)
 
     std::uniform_int_distribution<int> dis(0, tbLen - 1);
 
+
     for (int i = 0; i < outLen; /**/)
     {
         int used = 0;
-        for (; used < bufLen &&  i < outLen; ++used, ++i)
-        {     
+        for (; used < bufLen && i < outLen; ++used, ++i)
+        {
             buff[used] = table[dis(rgen)];
         }
-        fwrite(buff, sizeof(wchar_t), used, arg.getOutput());
+
+        if (printMode == 'a')
+        {
+            int cnt = WideCharToMultiByte(0, 0, buff, used, 0, 0, 0, 0);
+            char* abuff = new char[cnt];
+            WideCharToMultiByte(0, 0, buff, used, abuff, cnt, 0, 0);
+            fwrite(abuff, sizeof(char), cnt, arg.getOutput());
+        }
+        else { fwrite(buff, sizeof(wchar_t), used, arg.getOutput()); }
 
         if (arg.getOutput() == stdout)
         {
-            wprintf(L"\n");
+            if (printMode == 'a') { printf("\n"); }
+            else { wprintf(L"\n"); }
 
             // printing to screen has a max count
             break;

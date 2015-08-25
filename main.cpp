@@ -1,5 +1,3 @@
-// randstr.cpp : 定义控制台应用程序的入口点。
-//
 
 #include "stdafx.h"
 #include "argstore.h"
@@ -13,6 +11,7 @@ void phelp()
         L"\n    -l  Set print length (32-%d)."
         L"\n    -o  Set output file   (STDOUT)."
         L"\n    -s  Set random seed (CPU Tick)."
+        L"\n    -a  Print as ANSI."
         L"\n    -h  Print this help."
         L"\n"
         L"\nLength over 2048 only prints to a file."
@@ -30,6 +29,7 @@ void phelp()
     exit(0);
 }
 
+char printMode = 'u';
 
 int wmain(int argc, wchar_t** argv)
 {
@@ -41,7 +41,7 @@ int wmain(int argc, wchar_t** argv)
     wchar_t* argRange = 0;
 
     int opt = opterr = 0;
-    while (~(opt = getopt_w(argc, argv, L"s:l:o:r:h?")))
+    while (~(opt = getopt_w(argc, argv, L"as:l:o:r:h?")))
     {
         switch (opt)
         {
@@ -56,6 +56,9 @@ int wmain(int argc, wchar_t** argv)
             break;
         case L'r':
             argRange = optarg_w;
+            break;
+        case L'a':
+            printMode = 'a';
             break;
         default:
             phelp();
